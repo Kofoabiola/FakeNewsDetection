@@ -94,15 +94,15 @@ pip install -r requirements.txt
 If you use this code, please cite the article (details will be updated on publication) and the archived software:
 
 ```bibtex
-@article{abiola2026explainable,
+@article{kofoabiola,
   title   = {Explainable Fake News Detection under Distribution Shift: A Comparison of Fully Fine-Tuned Encoder and QLoRA-Adapted Decoder Configurations},
   author  = {Abiola, Kofoworola and Enamamu, Timiboudi S. and Ajao, Oluwaseun},
-  journal = {Analytics},
+  journal = {MDPI Analytics},
   year    = {2026},
   note    = {Under review}
 }
 
-@software{abiola2026code,
+@software{kofoabiola,
   author    = {Abiola, Kofoworola and Enamamu, Timiboudi S. and Ajao, Oluwaseun},
   title     = {Code for: Explainable Fake News Detection under Distribution Shift},
   year      = {2026},
@@ -115,7 +115,7 @@ If you use this code, please cite the article (details will be updated on public
 
 - **Kofoworola Abiola**, School of Computing & Mathematics, Manchester Metropolitan University
 - **Timiboudi S. Enamamu**, School of Engineering & Computing, University of Lancashire
-- **Oluwaseun Ajao** (corresponding author), School of Computing & Mathematics, Manchester Metropolitan University. s.ajao@mmu.ac.uk
+- **Oluwaseun Ajao** (corresponding author), School of Computing & Mathematics, Manchester Metropolitan University. 
 
 ## License
 
