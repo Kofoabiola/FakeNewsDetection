@@ -106,8 +106,6 @@ If you use this code, please cite the article (details will be updated on public
   author    = {Abiola, Kofoworola and Enamamu, Timiboudi S. and Ajao, Oluwaseun},
   title     = {Code for: Explainable Fake News Detection under Distribution Shift},
   year      = {2026},
-  publisher = {Zenodo},
-  doi       = {10.5281/zenodo.XXXXXXX}
 }
 ```
 
