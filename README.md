@@ -132,7 +132,7 @@ If you use this code, please cite the article (details will be updated on public
 @article{abiola2026explainable,
   title   = {Explainable Fake News Detection under Distribution Shift: A Comparison of Fully Fine-Tuned Encoder and QLoRA-Adapted Decoder Configurations},
   author  = {Abiola, Kofoworola and Enamamu, Timiboudi S. and Ajao, Oluwaseun},
-  journal = {Analytics},
+  journal = {MDPI Analytics},
   year    = {2026},
   note    = {Under review}
 }
