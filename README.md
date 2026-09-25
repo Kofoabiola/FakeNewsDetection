@@ -13,7 +13,7 @@ The study trains four transformer classifiers on one fake-news corpus and asks h
 | Encoder | BERT-base, RoBERTa-base | Full fine-tuning |
 | Decoder | Llama 3.2-3B, Qwen2.5-3B | QLoRA (4-bit NF4, LoRA r = 16, α = 32) |
 
-All models are trained on **GonzaloA** and evaluated zero-shot on **Pulk17**, **LIAR** and **WELFake**. LIME and SHAP are used to inspect RoBERTa's predictions, which revealed a Reuters-style dateline shortcut (`"reuters -"`) that survived preprocessing and pushed predictions towards *Real*.
+All models are trained on **GonzaloA** and evaluated zero-shot on **Pulk17**, **LIAR** and **WELFake**. LIME and SHAP are used to inspect RoBERTa's predictions, which revealed a Reuters-style dateline shortcut (`"reuters -"`) that survived preprocessing and pushed predictions towards *Real*. The trained RoBERTa model powers **ClariNews**, a proof-of-concept web interface that shows token-level explanations.
 
 ---
 
@@ -22,6 +22,7 @@ All models are trained on **GonzaloA** and evaluated zero-shot on **Pulk17**, **
 | File | Purpose |
 |---|---|
 | `FakeNewsDetection.ipynb` | Original end-to-end notebook: preprocessing, training of all four models, in-domain testing, cross-dataset evaluation, and LIME/SHAP analysis. Outputs are kept so logs, training times and metrics can be checked without re-running. |
+| `reviewer_experiments.py` | Experiments added during revision (see below). |
 | `requirements.txt` | Python dependencies. |
 
 ### Notebook structure
@@ -35,6 +36,15 @@ All models are trained on **GonzaloA** and evaluated zero-shot on **Pulk17**, **
 7. Training-curve comparison
 8. Cross-dataset evaluation on Pulk17, LIAR and WELFake, with confusion matrices
 9. LIME and SHAP explanations and LIME-SHAP agreement analysis
+
+### Revision experiments (`reviewer_experiments.py`)
+
+| Experiment | What it does |
+|---|---|
+| `exp1` | RoBERTa full fine-tuning vs RoBERTa + LoRA over multiple seeds, separating the effect of adaptation method from architecture |
+| `exp2` | Scores every model on the same frozen sample IDs with bootstrap confidence intervals and probability-ranked ROC-AUC (decoder probabilities from the " Fake"/" Real" label-token logits) |
+| `exp3` | LIME-SHAP top-k agreement (IoU) on a random sample of instances, across several values of k |
+| `exp4` | Reuters-dateline injection and removal on RoBERTa, reporting probability shifts and label-flip rates |
 
 ---
 
@@ -58,8 +68,8 @@ Labels are harmonised to **Fake = 0, Real = 1**. LIAR uses the binary labels sup
 The experiments were run on **Google Colab with an NVIDIA A100 (80 GB)**. The encoders will train on smaller GPUs; the 3B-parameter decoders need roughly 24 GB or more even with 4-bit quantisation.
 
 ```bash
-git clone https://github.com/<username>/clarinews-fake-news-detection.git
-cd clarinews-fake-news-detection
+git clone https://github.com/Kofoabiola/FakeNewsDetection.git
+cd FakeNewsDetection
 pip install -r requirements.txt
 ```
 
@@ -87,25 +97,45 @@ pip install -r requirements.txt
 
 **Original pipeline.** Open `FakeNewsDetection.ipynb` in Colab and run the cells in order. Each model section can also be run on its own after the setup and GonzaloA preprocessing cells.
 
+**Revision experiments.**
+
+```bash
+python reviewer_experiments.py exp1
+```
+
+Before running, fill in `clean()` and `load_split()` so they match the notebook's preprocessing and label mappings. `exp2`, `exp3` and `exp4` take loaded model checkpoints, so import the file in a notebook and call them directly:
+
+```python
+from reviewer_experiments import exp2, exp3, exp4
+```
+
+Results, sample IDs and per-article probabilities are written to `results/`. The sample identifiers and probability outputs behind Tables 6 and 7 of the revised article are available from the corresponding author on request.
+
+---
+
+## Notes on the original evaluation
+
+The revised manuscript explains these issues in detail; they are listed here so anyone re-running the notebook interprets its outputs correctly.
+
+- **WELFake overlaps GonzaloA.** An audit found 26,685 WELFake articles (37.0%) that exactly match GonzaloA training articles. WELFake results from the original notebook are therefore inflated and were withdrawn; `exp2` evaluates on a leakage-filtered WELFake set.
+- **Cross-dataset samples were not stratified.** The notebook takes the first *N* rows of each external corpus (for example `select(range(803))` for LIAR), and the encoders were scored on the full LIAR set while the decoders saw only the first 803 rows. `exp2` replaces this with class-balanced samples shared across all models.
+- **Single training runs.** Each configuration in the notebook was trained once. `exp1` adds multi-seed runs.
+- **Decoder ROC-AUC.** The notebook computes decoder ROC-AUC from hard labels, which equals balanced accuracy. `exp2` uses label-token probabilities instead.
+
 ---
 
 ## Citation
 
-If you use this code, please cite the article (details will be updated on publication) and the archived software:
+If you use this code, please cite the article (details will be updated on publication):
 
 ```bibtex
-@article{kofoabiola,
+@article{abiola2026explainable,
   title   = {Explainable Fake News Detection under Distribution Shift: A Comparison of Fully Fine-Tuned Encoder and QLoRA-Adapted Decoder Configurations},
   author  = {Abiola, Kofoworola and Enamamu, Timiboudi S. and Ajao, Oluwaseun},
-  journal = {MDPI Analytics},
+  journal = {Analytics},
   year    = {2026},
   note    = {Under review}
 }
-
-@software{kofoabiola,
-  author    = {Abiola, Kofoworola and Enamamu, Timiboudi S. and Ajao, Oluwaseun},
-  title     = {Code for: Explainable Fake News Detection under Distribution Shift},
-  year      = {2026},
 }
 ```
 
@@ -113,7 +143,7 @@ If you use this code, please cite the article (details will be updated on public
 
 - **Kofoworola Abiola**, School of Computing & Mathematics, Manchester Metropolitan University
 - **Timiboudi S. Enamamu**, School of Engineering & Computing, University of Lancashire
-- **Oluwaseun Ajao** (corresponding author), School of Computing & Mathematics, Manchester Metropolitan University. 
+- **Oluwaseun Ajao** (corresponding author), School of Computing & Mathematics, Manchester Metropolitan University. s.ajao@mmu.ac.uk
 
 ## License
 
