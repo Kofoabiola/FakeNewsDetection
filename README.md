@@ -4,7 +4,7 @@
 
 Code accompanying the article:
 
-> Abiola, K.; Enamamu, T.S.; Ajao, O. **Explainable Fake News Detection under Distribution Shift: A Comparison of Fully Fine-Tuned Encoder and QLoRA-Adapted Decoder Configurations.** *Analytics* (under review), 2026.
+> Abiola, K.; Enamamu, T.S.; Ajao, O. **Explainable Fake News Detection under Distribution Shift: A Comparison of Fully Fine-Tuned Encoder and QLoRA-Adapted Decoder Configurations.** *MDPI Analytics* (under review), 2026.
 
 The study trains four transformer classifiers on one fake-news corpus and asks how far their performance carries over to other corpora, and what they are actually learning. It compares:
 
@@ -143,7 +143,7 @@ If you use this code, please cite the article (details will be updated on public
 
 - **Kofoworola Abiola**, School of Computing & Mathematics, Manchester Metropolitan University
 - **Timiboudi S. Enamamu**, School of Engineering & Computing, University of Lancashire
-- **Oluwaseun Ajao** (corresponding author), School of Computing & Mathematics, Manchester Metropolitan University. s.ajao@mmu.ac.uk
+- **Oluwaseun Ajao** (corresponding author), School of Computing & Mathematics, Manchester Metropolitan University. 
 
 ## License
 
